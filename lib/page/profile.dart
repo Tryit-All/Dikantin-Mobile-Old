@@ -97,7 +97,7 @@ class _ProfileState extends State<Profile> {
                       child: ClipOval(
                         child: _foto != null
                             ? Image.network(
-                                "http://10.10.0.61/public/storage/" +
+                                "http://dikantin.com/" +
                                     _foto!.replaceAll('"', ''),
                                 width: 120.0,
                                 height: 120.0,

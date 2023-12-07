@@ -3,8 +3,10 @@
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dikantin/api/service_Api.dart';
 import 'package:dikantin/bottom_navigation.dart';
+import 'package:dikantin/controller/controller.dart';
 import 'package:dikantin/model/Penjualan_mode.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:intl/date_symbol_data_local.dart';
 
@@ -23,23 +25,20 @@ class _PesanState extends State<Pesan> {
   ServiceApiPenjualan servicepenjualan = ServiceApiPenjualan();
   late Future<List<ModelPenjualan>> listdata;
   @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    listdata = servicepenjualan.getPenjualan();
-  }
-
-  Future<void> _refreshpesanan() async {
-    setState(() {
-      listdata = servicepenjualan.getPenjualan();
-    });
-  }
+  // void initState() {
+  //   // TODO: implement initState
+  //   super.initState();
+  //   listdata = servicepenjualan.getPenjualan();
+  // }
 
   Widget build(BuildContext context) {
+    final pesananKantin pesananController = Get.find<pesananKantin>();
+
+    final AuthService authService = Get.put(AuthService());
     initializeDateFormatting("id_ID");
     return Scaffold(
       body: RefreshIndicator(
-        onRefresh: _refreshpesanan,
+        onRefresh: pesananController.loadPesananKantin,
         child: Container(
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
@@ -128,18 +127,18 @@ class _PesanState extends State<Pesan> {
                         child: Column(
                           children: [
                             SizedBox(
-                              height: MediaQuery.of(context).size.height / 1.35,
-                              child: FutureBuilder<List<ModelPenjualan>>(
-                                future: listdata,
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    List<ModelPenjualan>? isipenjualan =
-                                        snapshot.data;
-                                    return Container(
-                                      child: ListView.builder(
+                                height:
+                                    MediaQuery.of(context).size.height / 1.35,
+                                child: Obx(
+                                  () {
+                                    return ListView.builder(
                                         shrinkWrap: true,
-                                        itemCount: isipenjualan?.length,
+                                        itemCount: pesananController
+                                            .pesananMemasakOnline.length,
                                         itemBuilder: (context, index) {
+                                          final menuData = pesananController
+                                              .pesananMemasakOnline[index];
+
                                           return Column(
                                             children: [
                                               SizedBox(
@@ -178,10 +177,8 @@ class _PesanState extends State<Pesan> {
                                                                 left: 10,
                                                                 right: 2),
                                                         child: Image.network(
-                                                          "http://10.10.0.61/public/storage/" +
-                                                              isipenjualan![
-                                                                      index]
-                                                                  .foto
+                                                          "http://dikantin.com/" +
+                                                              menuData.foto
                                                                   .toString(),
                                                           fit: BoxFit.contain,
                                                         ),
@@ -191,8 +188,7 @@ class _PesanState extends State<Pesan> {
                                                       ),
                                                       Expanded(
                                                         child: Text(
-                                                          isipenjualan![index]
-                                                              .pesanan
+                                                          menuData.pesanan
                                                               .toString(),
                                                         ),
                                                         flex: 2,
@@ -200,15 +196,12 @@ class _PesanState extends State<Pesan> {
                                                       Expanded(
                                                         child: Text(
                                                           "x " +
-                                                              isipenjualan![
-                                                                      index]
-                                                                  .jumlah
+                                                              menuData.jumlah
                                                                   .toString(),
                                                         ),
                                                         flex: 1,
                                                       ),
-                                                      isipenjualan[index]
-                                                                  .noMeja
+                                                      menuData.noMeja
                                                                   .toString() ==
                                                               "0"
                                                           ? Expanded(
@@ -228,8 +221,7 @@ class _PesanState extends State<Pesan> {
                                                           : Expanded(
                                                               child: Text(
                                                                 "Meja " +
-                                                                    isipenjualan![
-                                                                            index]
+                                                                    menuData
                                                                         .noMeja
                                                                         .toString(),
                                                                 style: TextStyle(
@@ -241,10 +233,10 @@ class _PesanState extends State<Pesan> {
                                                               ),
                                                               flex: 1,
                                                             ),
-                                                      isipenjualan[index]
-                                                                  .status_detail ==
+                                                      menuData.statusDetail ==
                                                               null
                                                           ? ElevatedButton(
+                                                              //offline
                                                               style:
                                                                   ElevatedButton
                                                                       .styleFrom(
@@ -259,9 +251,11 @@ class _PesanState extends State<Pesan> {
                                                               child: const Text(
                                                                   "Memasak"),
                                                             )
-                                                          : isipenjualan[index]
-                                                                      .status_detail ==
-                                                                  "menunggu"
+                                                          : menuData
+                                                                  .statusDetail
+                                                                  .toString()
+                                                                  .contains(
+                                                                      "menunggu")
                                                               ? ElevatedButton(
                                                                   style: ElevatedButton
                                                                       .styleFrom(
@@ -273,7 +267,7 @@ class _PesanState extends State<Pesan> {
                                                                             1),
                                                                   ),
                                                                   onPressed:
-                                                                      () {
+                                                                      () async {
                                                                     showDialog(
                                                                       context:
                                                                           context,
@@ -293,7 +287,7 @@ class _PesanState extends State<Pesan> {
                                                                           actions: <Widget>[
                                                                             Center(
                                                                               child: Text(
-                                                                                "Prose Pesanan ?",
+                                                                                "Pesanan Memasak ?",
                                                                                 style: TextStyle(
                                                                                   color: Color(0xff3CA2D9),
                                                                                   fontWeight: FontWeight.w700,
@@ -311,9 +305,7 @@ class _PesanState extends State<Pesan> {
                                                                                   child: ElevatedButton(
                                                                                     child: Text('Ya'),
                                                                                     onPressed: () async {
-                                                                                      final updatePenjualanService = UpdatePenjualanService();
-                                                                                      await updatePenjualanService.updateStatusPenjualan(isipenjualan[index].idDetail.toString(), "1", isipenjualan[index].kantin.toString(), isipenjualan[index].idMenu.toString());
-                                                                                      _refreshpesanan();
+                                                                                      await pesananController.keMemasakOnline(menuData.kantin.toString(), menuData.idMenu, menuData.kodeTr);
                                                                                       Navigator.pop(context);
                                                                                     },
                                                                                     style: ElevatedButton.styleFrom(
@@ -349,9 +341,16 @@ class _PesanState extends State<Pesan> {
                                                                   child: const Text(
                                                                       "Memasak"),
                                                                 )
-                                                              : isipenjualan[index]
-                                                                          .status_detail ==
-                                                                      "selesai"
+                                                              : menuData.statusDetail
+                                                                          .toString()
+                                                                          .contains(
+                                                                              "memasak") &&
+                                                                      menuData
+                                                                          .noMeja
+                                                                          .toString()
+                                                                          .contains(
+                                                                              "0")
+                                                                  //online
                                                                   ? ElevatedButton(
                                                                       style: ElevatedButton
                                                                           .styleFrom(
@@ -359,18 +358,7 @@ class _PesanState extends State<Pesan> {
                                                                             Colors.green,
                                                                       ),
                                                                       onPressed:
-                                                                          () {},
-                                                                      child: const Text(
-                                                                          "Pengiriman"),
-                                                                    )
-                                                                  : ElevatedButton(
-                                                                      style: ElevatedButton
-                                                                          .styleFrom(
-                                                                        backgroundColor:
-                                                                            Colors.green,
-                                                                      ),
-                                                                      onPressed:
-                                                                          () {
+                                                                          () async {
                                                                         showDialog(
                                                                           context:
                                                                               context,
@@ -404,9 +392,85 @@ class _PesanState extends State<Pesan> {
                                                                                       child: ElevatedButton(
                                                                                         child: Text('Ya'),
                                                                                         onPressed: () async {
-                                                                                          final updatePenjualanService = UpdatePenjualanService();
-                                                                                          await updatePenjualanService.updateStatusPenjualan(isipenjualan[index].idDetail.toString(), "2", isipenjualan[index].kantin.toString(), isipenjualan[index].idMenu.toString());
-                                                                                          _refreshpesanan();
+                                                                                          await pesananController.keMemasakselesaiOnline(menuData.kantin.toString(), menuData.idMenu, menuData.kodeTr);
+                                                                                          Navigator.pop(context);
+                                                                                        },
+                                                                                        style: ElevatedButton.styleFrom(
+                                                                                          shape: RoundedRectangleBorder(
+                                                                                            borderRadius: BorderRadius.circular(10.0),
+                                                                                          ),
+                                                                                          backgroundColor: Colors.green,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                    SizedBox(width: 8),
+                                                                                    Expanded(
+                                                                                      child: ElevatedButton(
+                                                                                        child: Text('Tidak'),
+                                                                                        onPressed: () {
+                                                                                          Navigator.pop(context);
+                                                                                        },
+                                                                                        style: ElevatedButton.styleFrom(
+                                                                                          shape: RoundedRectangleBorder(
+                                                                                            borderRadius: BorderRadius.circular(10.0),
+                                                                                          ),
+                                                                                          backgroundColor: Colors.red,
+                                                                                        ),
+                                                                                      ),
+                                                                                    ),
+                                                                                  ],
+                                                                                ),
+                                                                              ],
+                                                                            );
+                                                                          },
+                                                                        );
+                                                                      },
+                                                                      child: const Text(
+                                                                          "Selesai"),
+                                                                    )
+                                                                  //offline
+                                                                  : ElevatedButton(
+                                                                      style: ElevatedButton
+                                                                          .styleFrom(
+                                                                        backgroundColor:
+                                                                            Colors.green,
+                                                                      ),
+                                                                      onPressed:
+                                                                          () async {
+                                                                        showDialog(
+                                                                          context:
+                                                                              context,
+                                                                          builder:
+                                                                              (context) {
+                                                                            return AlertDialog(
+                                                                              content: Image.asset(
+                                                                                "assets/Logout.png",
+                                                                                width: 150.0,
+                                                                                height: 150.0,
+                                                                                fit: BoxFit.fitHeight,
+                                                                              ),
+                                                                              actions: <Widget>[
+                                                                                Center(
+                                                                                  child: Text(
+                                                                                    "Pesanan Selesai ?",
+                                                                                    style: TextStyle(
+                                                                                      color: Color(0xff3CA2D9),
+                                                                                      fontWeight: FontWeight.w700,
+                                                                                      fontSize: 18.0,
+                                                                                    ),
+                                                                                  ),
+                                                                                ),
+                                                                                SizedBox(
+                                                                                  height: 20,
+                                                                                ),
+                                                                                Row(
+                                                                                  mainAxisAlignment: MainAxisAlignment.center,
+                                                                                  children: [
+                                                                                    Expanded(
+                                                                                      child: ElevatedButton(
+                                                                                        child: Text('Ya'),
+                                                                                        onPressed: () async {
+                                                                                          await pesananController.keMemasakselesaiOffline(menuData.kantin.toString(), menuData.idMenu, menuData.kodeTr);
                                                                                           Navigator.pop(context);
                                                                                         },
                                                                                         style: ElevatedButton.styleFrom(
@@ -449,21 +513,9 @@ class _PesanState extends State<Pesan> {
                                                   )),
                                             ],
                                           );
-                                        },
-                                      ),
-                                    );
-                                  } else if (snapshot.hasError) {
-                                    print("$snapshot.data");
-                                    return Text("$snapshot.data");
-                                  }
-                                  return Center(
-                                    child: CircularProgressIndicator(
-                                      color: Colors.blue,
-                                    ),
-                                  );
-                                },
-                              ),
-                            ),
+                                        });
+                                  },
+                                ))
                           ],
                         ),
                       ),
