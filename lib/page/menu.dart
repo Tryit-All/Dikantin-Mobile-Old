@@ -143,7 +143,7 @@ class _MenuState extends State<Menu> {
                                                 child: Column(
                                                   children: <Widget>[
                                                     Image.network(
-                                                      "http://10.10.0.61/public/storage/" +
+                                                      "http://dikantin.com/" +
                                                           isimenu![index]
                                                               .foto
                                                               .toString(),

@@ -5,13 +5,14 @@ import 'package:dikantin/model/Statistik.dart';
 import 'package:dikantin/model/Penghasilan_bulanan.dart';
 import 'package:dikantin/model/Penjualan_mode.dart';
 import 'package:dikantin/model/Riwayat_model.dart';
+import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:dikantin/model/Menu_model.dart';
 import 'package:dikantin/model/User_model.dart';
 
-class AuthService {
+class AuthService extends GetxController {
   static const String apiUrl = 'http://dikantin.com/api/validate/loginKantin';
 
   Future<void> login(String emailOrUsername, String password) async {
@@ -65,6 +66,8 @@ class AuthService {
       throw Exception('Gagal login');
     }
   }
+
+ 
 }
 
 class ServiceApi {

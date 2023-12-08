@@ -9,6 +9,9 @@ import 'package:dikantin/page/pesan.dart';
 
 import 'package:dikantin/page/profile.dart';
 import 'package:dikantin/page/riwayat.dart';
+import 'package:get/get.dart';
+
+import 'controller/controller.dart';
 
 class Navigation extends StatefulWidget {
   const Navigation({super.key});
@@ -18,6 +21,8 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
+      final pesananKantin pesananController = Get.put(pesananKantin());
+
   int currentTab = 0;
 
   final List<Widget> screens = [
@@ -41,6 +46,7 @@ class _NavigationState extends State<Navigation> {
           setState(() {
             currentScreen = Pesan();
             currentTab = 3;
+            pesananController.loadPesananKantin();
           });
         },
         backgroundColor:
