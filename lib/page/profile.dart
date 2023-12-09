@@ -6,6 +6,7 @@ import 'package:dikantin/login.dart';
 import 'package:dikantin/model/Menu_model.dart';
 import 'package:dikantin/model/User_model.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Profile extends StatefulWidget {
@@ -30,9 +31,17 @@ class _ProfileState extends State<Profile> {
     _loadUserProfile();
   }
 
-  void clear() async {
+  void clears() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.clear();
+  }
+
+  Future<void> logout() async {
+    // Hapus data dari SharedPreferences
+    final SharedPreferences prefs = await SharedPreferences.getInstance();
+    prefs.clear();
+    // Navigasi ke halaman login
+    Get.offAll(Login());
   }
 
   Future<void> _loadUserProfile() async {
@@ -250,19 +259,8 @@ class _ProfileState extends State<Profile> {
                                           Expanded(
                                             child: ElevatedButton(
                                               child: Text('Ya'),
-                                              onPressed: () {
-                                                clear();
-                                                Navigator.push(
-                                                  context,
-                                                  MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        WillPopScope(
-                                                      onWillPop: () async =>
-                                                          false,
-                                                      child: Login(),
-                                                    ),
-                                                  ),
-                                                );
+                                              onPressed: () async {
+                                                await logout();
                                               },
                                               style: ElevatedButton.styleFrom(
                                                 shape: RoundedRectangleBorder(

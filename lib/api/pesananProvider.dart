@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:dikantin/model/status_model.dart';
 import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,34 @@ class PesananKantin extends GetxController {
 
     if (response.statusCode == 200) {
       return Test.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+  Future<Status> loadStatusSucces() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? idKantin = prefs.getString('id_kantin');
+    final response = await http.post(
+      Uri.parse('http://dikantin.com/api/apisucces-date'),
+      body: {'id_kantin': idKantin?.toString() ?? ''},
+    );
+
+    if (response.statusCode == 200) {
+      return Status.fromJson(jsonDecode(response.body));
+    } else {
+      throw Exception('Gagal memuat data');
+    }
+  }
+  Future<Status> loadStatusDilayani() async {
+    final prefs = await SharedPreferences.getInstance();
+    String? idKantin = prefs.getString('id_kantin');
+    final response = await http.post(
+      Uri.parse('http://dikantin.com/api/apiproses-date'),
+      body: {'id_kantin': idKantin?.toString() ?? ''},
+    );
+
+    if (response.statusCode == 200) {
+      return Status.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Gagal memuat data');
     }
@@ -98,4 +127,6 @@ class PesananKantin extends GetxController {
       throw Exception('Gagal membatalkan pesanan');
     }
   }
+
+
 }

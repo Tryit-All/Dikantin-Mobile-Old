@@ -551,92 +551,196 @@ class _BerandaState extends State<Beranda> {
               SizedBox(
                 height: 5,
               ),
-              Container(
-                margin: EdgeInsets.only(left: 12, top: 10),
-                child: Text(
-                  "Grafik Penjualan",
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: Color(0xff514d4e),
-                    fontWeight: FontWeight.bold,
-                  ),
-                ),
-                alignment: Alignment.centerLeft,
-              ),
-              SizedBox(
-                height: 10,
-              ),
               Padding(
-                padding: const EdgeInsets.only(right: 10, top: 15),
-                child: Container(
-                  height: 200,
-                  width: double.infinity,
-                  child: FutureBuilder<List<Statistik>>(
-                    future: penjualanService.getStatistik('id_Kantin'),
-                    builder: (context, snapshot) {
-                      if (snapshot.hasData) {
-                        final data = snapshot.data!;
-                        return LineChart(
-                          LineChartData(
-                            lineBarsData: [
-                              LineChartBarData(
-                                spots: data
-                                    .map((item) => FlSpot(
-                                        item.tanggal?.toDouble() ?? 0,
-                                        double.tryParse(item.jumlah ?? '0')
-                                                ?.toDouble() ??
-                                            0))
-                                    .toList(),
-                                isCurved: true,
-                                gradient: LinearGradient(
-                                  begin: Alignment.topRight,
-                                  end: Alignment.bottomLeft,
-                                  colors: [
-                                    Colors.blue,
-                                    Colors.white,
-                                  ],
-                                ),
-                                belowBarData: BarAreaData(
-                                  show: true,
-                                  gradient: LinearGradient(
-                                      begin: Alignment.topRight,
-                                      end: Alignment.bottomLeft,
-                                      colors: [Colors.blue, Colors.white]),
-                                ),
-                                barWidth: 2,
+                padding: const EdgeInsets.all(20.0),
+                child: Row(
+                  mainAxisSize: MainAxisSize.max,
+                  children: [
+                    Expanded(
+                      child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                          child: Container(
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 12, 12, 12),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Icon(
+                                    Icons.receipt_rounded,
+                                    color: Colors.white,
+                                    size: 44,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 8, 0, 4),
+                                    child: Text(
+                                      "p",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Untuk Dikirm',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                  ),
+                                ],
                               ),
-                            ],
-                            titlesData: FlTitlesData(
-                                // Mengatur label sumbu x dan y menjadi none
-                                rightTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                  // Tambahkan konfigurasi untuk sumbu y
-                                  // jika diperlukan
-                                ),
-                                topTitles: AxisTitles(
-                                  sideTitles: SideTitles(showTitles: false),
-                                  // Tambahkan konfigurasi untuk sumbu x
-                                  // jika diperlukan
-                                ),
-
-                                // Konfigurasi bottom titles
-                                bottomTitles: AxisTitles(
-                                    sideTitles: SideTitles(showTitles: true))),
-                            backgroundColor: Colors.white,
-                          ),
-                          swapAnimationDuration:
-                              const Duration(milliseconds: 150),
-                          swapAnimationCurve: Curves.linear,
-                        );
-                      } else if (snapshot.hasError) {
-                        return Text('${snapshot.error}');
-                      } else {
-                        return const CircularProgressIndicator();
-                      }
-                    },
-                  ),
+                            ),
+                          )),
+                    ),
+                    SizedBox(
+                      width: 13,
+                    ),
+                    Expanded(
+                      child: Padding(
+                          padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 12),
+                          child: Container(
+                            width: 200,
+                            decoration: BoxDecoration(
+                              color: Colors.blue[300],
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: Padding(
+                              padding: EdgeInsetsDirectional.fromSTEB(
+                                  12, 12, 12, 12),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.max,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                // ignore: prefer_const_literals_to_create_immutables
+                                children: [
+                                  Icon(
+                                    Icons.ssid_chart_rounded,
+                                    color: Colors.white,
+                                    size: 44,
+                                  ),
+                                  Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 8, 0, 4),
+                                    child: Text(
+                                      "p",
+                                      textAlign: TextAlign.center,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 18),
+                                    ),
+                                  ),
+                                  Text(
+                                    'Konfirmasi',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 15),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )),
+                    ),
+                  ],
                 ),
               ),
+              // Container(
+              //   margin: EdgeInsets.only(left: 12, top: 10),
+              //   child: Text(
+              //     "Grafik Penjualan",
+              //     style: TextStyle(
+              //       fontSize: 15,
+              //       color: Color(0xff514d4e),
+              //       fontWeight: FontWeight.bold,
+              //     ),
+              //   ),
+              //   alignment: Alignment.centerLeft,
+              // ),
+              // SizedBox(
+              //   height: 10,
+              // ),
+              // Padding(
+              //   padding: const EdgeInsets.only(right: 10, top: 15),
+              //   child: Container(
+              //     height: 200,
+              //     width: double.infinity,
+              //     child: FutureBuilder<List<Statistik>>(
+              //       future: penjualanService.getStatistik('id_Kantin'),
+              //       builder: (context, snapshot) {
+              //         if (snapshot.hasData) {
+              //           final data = snapshot.data!;
+              //           return LineChart(
+              //             LineChartData(
+              //               lineBarsData: [
+              //                 LineChartBarData(
+              //                   spots: data
+              //                       .map((item) => FlSpot(
+              //                           item.tanggal?.toDouble() ?? 0,
+              //                           double.tryParse(item.jumlah ?? '0')
+              //                                   ?.toDouble() ??
+              //                               0))
+              //                       .toList(),
+              //                   isCurved: true,
+              //                   gradient: LinearGradient(
+              //                     begin: Alignment.topRight,
+              //                     end: Alignment.bottomLeft,
+              //                     colors: [
+              //                       Colors.blue,
+              //                       Colors.white,
+              //                     ],
+              //                   ),
+              //                   belowBarData: BarAreaData(
+              //                     show: true,
+              //                     gradient: LinearGradient(
+              //                         begin: Alignment.topRight,
+              //                         end: Alignment.bottomLeft,
+              //                         colors: [Colors.blue, Colors.white]),
+              //                   ),
+              //                   barWidth: 2,
+              //                 ),
+              //               ],
+              //               titlesData: FlTitlesData(
+              //                   // Mengatur label sumbu x dan y menjadi none
+              //                   rightTitles: AxisTitles(
+              //                     sideTitles: SideTitles(showTitles: false),
+              //                     // Tambahkan konfigurasi untuk sumbu y
+              //                     // jika diperlukan
+              //                   ),
+              //                   topTitles: AxisTitles(
+              //                     sideTitles: SideTitles(showTitles: false),
+              //                     // Tambahkan konfigurasi untuk sumbu x
+              //                     // jika diperlukan
+              //                   ),
+
+              //                   // Konfigurasi bottom titles
+              //                   bottomTitles: AxisTitles(
+              //                       sideTitles: SideTitles(showTitles: true))),
+              //               backgroundColor: Colors.white,
+              //             ),
+              //             swapAnimationDuration:
+              //                 const Duration(milliseconds: 150),
+              //             swapAnimationCurve: Curves.linear,
+              //           );
+              //         } else if (snapshot.hasError) {
+              //           return Text('${snapshot.error}');
+              //         } else {
+              //           return const CircularProgressIndicator();
+              //         }
+              //       },
+              //     ),
+              //   ),
+              // ),
               SizedBox(
                 height: 60,
               ),
