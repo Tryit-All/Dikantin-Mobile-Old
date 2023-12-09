@@ -15,7 +15,7 @@ import 'package:dikantin/model/User_model.dart';
 class AuthService extends GetxController {
   static const String apiUrl = 'http://dikantin.com/api/validate/loginKantin';
 
-  Future<void> login(String emailOrUsername, String password) async {
+  Future<void> login(String emailOrUsername, String password, String fcm) async {
     try {
       String email = "";
       String username = "";
@@ -28,6 +28,7 @@ class AuthService extends GetxController {
         'email': email,
         'username': username,
         'password': password,
+        'fcm_token': fcm,
       });
 
       if (response.statusCode == 200) {

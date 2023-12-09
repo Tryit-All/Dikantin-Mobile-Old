@@ -5,8 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:carbon_icons/carbon_icons.dart';
 import 'package:dikantin/bottom_navigation.dart';
 import 'package:dikantin/register.dart';
+import 'package:get/get.dart';
 
 import 'api/service_Api.dart';
+import 'controller/controller_login.dart';
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -18,6 +20,8 @@ class Login extends StatefulWidget {
 class _LoginState extends State<Login> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
+  final LoginKantinController loginKantinController =
+      Get.put(LoginKantinController());
 
   bool _obscureText = true;
 
@@ -27,55 +31,56 @@ class _LoginState extends State<Login> {
     });
   }
 
-  Future<void> _handleLogin() async {
-    String emailOrUsername = emailController.text;
-    String password = passwordController.text;
-    AuthService authService = AuthService();
-    try {
-      await authService.login(emailOrUsername, password);
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(
-          builder: (context) => Navigation(),
-        ),
-      );
-    } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Row(
-            children: [
-              Icon(
-                Icons.close,
-                color: Colors.white,
-                size: 40,
-              ),
-              Text(
-                e.toString(),
-                style: TextStyle(fontSize: 8),
-              ),
-            ],
-          ),
-          duration: Duration(seconds: 5),
-          behavior: SnackBarBehavior.floating,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10.0),
-            side: BorderSide(color: Colors.red, width: 2.0),
-          ),
-          backgroundColor: Colors.red,
-          elevation: 5.0,
-          margin: EdgeInsets.all(10.0),
-          padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
-          action: SnackBarAction(
-            label: 'Dismiss',
-            textColor: Colors.white,
-            onPressed: () {
-              ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            },
-          ),
-        ),
-      );
-    }
-  }
+  // Future<void> _handleLogin() async {
+  //   String emailOrUsername = emailController.text;
+  //   String password = passwordController.text;
+  //   AuthService authService = AuthService();
+  //   print("klik");
+  //   try {
+  //     await authService.login(emailOrUsername, password);
+  //     Navigator.pushReplacement(
+  //       context,
+  //       MaterialPageRoute(
+  //         builder: (context) => Navigation(),
+  //       ),
+  //     );
+  //   } catch (e) {
+  //     ScaffoldMessenger.of(context).showSnackBar(
+  //       SnackBar(
+  //         content: Row(
+  //           children: [
+  //             Icon(
+  //               Icons.close,
+  //               color: Colors.white,
+  //               size: 40,
+  //             ),
+  //             Text(
+  //               e.toString(),
+  //               style: TextStyle(fontSize: 8),
+  //             ),
+  //           ],
+  //         ),
+  //         duration: Duration(seconds: 5),
+  //         behavior: SnackBarBehavior.floating,
+  //         shape: RoundedRectangleBorder(
+  //           borderRadius: BorderRadius.circular(10.0),
+  //           side: BorderSide(color: Colors.red, width: 2.0),
+  //         ),
+  //         backgroundColor: Colors.red,
+  //         elevation: 5.0,
+  //         margin: EdgeInsets.all(10.0),
+  //         padding: EdgeInsets.symmetric(vertical: 5.0, horizontal: 10.0),
+  //         action: SnackBarAction(
+  //           label: 'Dismiss',
+  //           textColor: Colors.white,
+  //           onPressed: () {
+  //             ScaffoldMessenger.of(context).hideCurrentSnackBar();
+  //           },
+  //         ),
+  //       ),
+  //     );
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -178,37 +183,49 @@ class _LoginState extends State<Login> {
                                 backgroundColor:
                                     Color.fromARGB(255, 55, 156, 211),
                               ),
-                              onPressed: _handleLogin,
+                              onPressed: () {
+                                loginKantinController.login(
+                                    emailController.text,
+                                    passwordController.text,
+                                    "dsddasjgdhgashgdh");
+                              },
                               child: const Text("Login"),
                             ),
                           ),
                           SizedBox(height: 20),
-                          SizedBox(
-                            width: 400,
-                            height: 40,
-                            child: ElevatedButton(
-                              style: ElevatedButton.styleFrom(
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(30.0),
-                                  ),
-                                  backgroundColor: Colors.white),
-                              onPressed: () {},
-                              child: const Text(
-                                "Register",
-                                style: const TextStyle(
-                                  color: Colors.black54,
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(
-                            height: 20,
-                          ),
-                          Align(
-                            alignment: Alignment.center,
-                            child: Text("Forgot Password?"),
-                          ),
-                          SizedBox(height: 20),
+                          // SizedBox(
+                          //   width: 400,
+                          //   height: 40,
+                          //   child: ElevatedButton(
+                          //     style: ElevatedButton.styleFrom(
+                          //         shape: RoundedRectangleBorder(
+                          //           borderRadius: BorderRadius.circular(30.0),
+                          //         ),
+                          //         backgroundColor: Colors.white),
+                          //     onPressed: () {
+                          //       Navigator.push(
+                          //         context,
+                          //         MaterialPageRoute(
+                          //           builder: (context) => Register(),
+                          //         ),
+                          //       );
+                          //     },
+                          //     child: const Text(
+                          //       "Register",
+                          //       style: const TextStyle(
+                          //         color: Colors.black54,
+                          //       ),
+                          //     ),
+                          //   ),
+                          // ),
+                          // SizedBox(
+                          //   height: 20,
+                          // ),
+                          // Align(
+                          //   alignment: Alignment.center,
+                          //   child: Text("Forgot Password?"),
+                          // ),
+                          // SizedBox(height: 20),
                         ],
                       ),
                     ),

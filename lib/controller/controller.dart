@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import '../api/provider.dart';
+import '../api/pesananProvider.dart';
 import '../model/pesananModel.dart';
 
 class pesananKantin extends GetxController {
@@ -29,6 +29,28 @@ class pesananKantin extends GetxController {
       print('Error fetching data: $error');
     }
   }
+  // Future<void> loadSelesai() async {
+  //   try {
+  //     isLoading(true);
+  //     final result = await pesanankantinMemasakOnline.value.loadStatusSucces();
+  //     pesananMemasakOnline.assignAll(result.data ?? []);
+  //     isLoading(false);
+  //   } catch (error) {
+  //     isLoading(false);
+  //     print('Error fetching data: $error');
+  //   }
+  // }
+  // Future<void> loadDilayani() async {
+  //   try {
+  //     isLoading(true);
+  //     final result = await pesanankantinMemasakOnline.value.loadStatusDilayani();
+  //     pesananMemasakOnline.assignAll(result.data ?? []);
+  //     isLoading(false);
+  //   } catch (error) {
+  //     isLoading(false);
+  //     print('Error fetching data: $error');
+  //   }
+  // }
 
   Future<void> keMemasakOnline(String id_kantin, id_menu, kodeTr) async {
     try {
